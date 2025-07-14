@@ -44,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchWords() {
         try {
             console.log("Attempting to fetch words.json...");
-            const response = await fetch('/words.json');
+            // Use a relative path for GitHub Pages project sites
+            const response = await fetch('words.json');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -140,13 +141,16 @@ document.addEventListener('DOMContentLoaded', () => {
             messageContainer.textContent = 'Congratulations! You win!';
             playAgainButton.style.display = 'block';
             isGameOver = true;
-        } else if (currentRow === 5) { // This is the 6th guess (0-indexed 5th row)
-            messageContainer.textContent = `You lose! The word was ${secretWord}`;
-            playAgainButton.style.display = 'block';
-            isGameOver = true;
         } else {
             currentRow++;
             currentTile = 0;
+        }
+
+        // Check for game over (loss) after advancing row, if not already won
+        if (!isWin && currentRow === 6) {
+            messageContainer.textContent = `You lose! The word was ${secretWord}`;
+            playAgainButton.style.display = 'block';
+            isGameOver = true;
         }
         console.log(`handleEnter: End - currentRow=${currentRow}, isGameOver=${isGameOver}`);
     }
